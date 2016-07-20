@@ -1,0 +1,8 @@
+applications:
+- path: target/calc.war
+  memory: 512M
+  instances: 1
+  domain: mybluemix.net
+  name: ProbabilityCalculator
+  host: probability
+  disk_quota: 1024M

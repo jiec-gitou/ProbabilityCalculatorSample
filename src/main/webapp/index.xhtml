@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+<head>
+	<title>確率計算機</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+</h:head>
+<h:body>
+<body>
+<f:view transient="true">
+<div class="container">
+<h:form>
+	<h:messages id="err" errorStyle="color:red;"/>
+	<hr/>
+	<h:commandButton class="btn btn-primary btn-lg btn-block" id="buttonId" value="追加" actionListener="#{backingBean.newItem}" />
+	<hr/>
+	<h:dataTable value="#{backingBean.items}" var="item" border="1" class="table">
+		<h:column>
+			<f:facet name="header"><h:outputText value="種別"/></f:facet>
+			<h:inputText id="kind" value="#{item.kind}" type="text" immediate="true" class="form-control"/>
+		</h:column>
+		<h:column>
+			<f:facet name="header"><h:outputText value="確率"/></f:facet>
+			<!--div class="input-group"-->
+				<h:inputText id="probability" value="#{item.probability}" type="text" immediate="true" class="form-control"/>
+				<!-- div class="input-group-addon">％</div>
+			</div-->
+		</h:column>
+		<h:column>
+			<f:facet name="header"><h:outputText value="削除ボタン"/></f:facet>
+			<h:commandButton actionListener="#{backingBean.delete(item)}" id="delete" value="削除" class="btn btn-warning btn-block"/>
+		</h:column>
+	</h:dataTable>
+	<h:commandButton class="btn btn-info btn-lg btn-block" id="actionId" value="実行" actionListener="#{backingBean.action}" />
+	<hr/>
+	<div class="row">
+		<div class="col-sm-1">&nbsp;</div>
+		<ui:repeat value="#{backingBean.results}" var="result">
+			<span class="col-sm-1 label #{result.label.string}">#{result.kind}</span>&nbsp;
+		</ui:repeat>
+	</div>
+</h:form>
+</div>
+</f:view>
+</body>
+</h:body>
+</html>
