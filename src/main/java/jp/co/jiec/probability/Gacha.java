@@ -32,18 +32,13 @@ public class Gacha {
 	 */
 	public void setUp(Collection<Item> items){
 		ranges.clear();
-		Range last = items.stream()
-				.map(Range::new)
-				.peek(ranges::add)
-				.reduce(new Range(), (left, right) -> left.linkToNext(right));
+		//FIXME:(4)Itemの数だけRangeを作成し、Rangeのaboveとbelowを連結します。
+		Range last = null;
 		
 		if(last.getAbove().doubleValue() < 100.0d){
-			// 100%に不足している場合はダミーを挿入
+			//FIXME:(5)合計が100%に満たない場合はダミーのItemを作成して合計が100%になるようにします。
 			Item item = new Item();
 			item.setKind("不足分ダミー");
-			item.setProbability(new BigDecimal(100).subtract(last.getAbove()));
-			items.add(item);
-			ranges.add(last.linkToNext(new Range(item)));
 		}
 	}
 
@@ -53,10 +48,7 @@ public class Gacha {
 	 * @return 選択された排出要素
 	 */
 	public Item roll(double d){
-		return ranges.stream()
-				.filter(range -> range.contain(d))
-				.map(Range::getItem)
-				.findFirst()
-				.orElse(Item.EMPTY);
+		//FIXME:(6)与えられたdouble値がどの範囲に含まれているかを探して、その範囲のItemを返します。
+		return null;
 	}
 }

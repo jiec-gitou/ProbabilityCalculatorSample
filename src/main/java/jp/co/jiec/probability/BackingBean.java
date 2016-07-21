@@ -53,9 +53,7 @@ public class BackingBean implements Serializable{
 	 */
 	@PostConstruct
 	public void init(){
-		Arrays.stream(Constants.INIT_PARAMS)
-			.map(Item::new)
-			.collect(Collectors.toCollection(() -> this.items));
+		//FIXME:(1)Constants.INIT_PARAMSを使ってthis.itemsにItemをセットします
 	}
 
 	public List<List<Item>> getResultAny() {
@@ -126,10 +124,8 @@ public class BackingBean implements Serializable{
 	private List<Item> rollGacha() {
 		gacha.setUp(this.items);
 		this.colorredItems();
-		return Stream.generate(() -> Math.random() * 100.0d)
-			.limit(Constants.MAX_COUNT)
-			.map(d -> gacha.roll(d))
-			.collect(Collectors.toList());
+		//FIXME:(3)Constatns.MAX_COUNT個の乱数を作ってgacha.roll()を実行し、結果をリストに格納して返します。
+		return new ArrayList<>();
 	}
 
 	/**
@@ -158,11 +154,8 @@ public class BackingBean implements Serializable{
 	 * @return 合計が100%を超えていたらfalse
 	 */
 	private boolean isValid() {
-		BigDecimal summary = this.items.stream()
-				.map(Item::getProbability)
-				.reduce(BigDecimal.ZERO, (left, right) -> left.add(right));
-		int val = summary.multiply(new BigDecimal(Math.pow(10, Constants.SCALE))).intValue();
-		return val >= 0 && val <= 100 * Math.pow(10, Constants.SCALE);
+		//FIXME:(2)this.itemsのprobabilityの合計が100%を超えていたらfalseを、そうでなければtrueを返します。
+		return true;
 	}
 	
 	/**
@@ -170,24 +163,20 @@ public class BackingBean implements Serializable{
 	 * @return
 	 */
 	public Item getMostRare(){
-		return this.items.stream()
-				.sorted(Comparator.comparing(Item::getProbability))
-				.findFirst()
-				.orElse(Item.EMPTY);
+		//FIXME:(7)this.itemsの中で最もprobabilityが小さいItemを抽出します。
+		return Item.EMPTY;
 	}
 	
 	/**
 	 * 目的のものが出るまで繰り返す
 	 * @param item 目的のItem
 	 */
-	public void keepRollingFor(Item item){
+	public void keepRollingFor(Item purpose){
 		clear();
 		if(!isValid()){
 			actionFailed();
-		}else if(!item.equals(Item.EMPTY)){
-			Stream.generate(() -> rollGacha())
-				.peek(r -> this.resultAny.add(r))
-				.anyMatch(r -> r.contains(item));
+		}else if(!purpose.equals(Item.EMPTY)){
+			//FIXME:(8)purposeと同じItemが出現するまでrollGachaを繰り返し、結果をthis.resultAnyに格納します。
 			
 			countResultAny();
 		}
@@ -197,8 +186,6 @@ public class BackingBean implements Serializable{
 	 * Item毎の出現数をカウントして結果を更新する。
 	 */
 	private void countResultAny(){
-		this.resultAny.stream()
-				.flatMap(List::stream)
-				.collect(Collectors.groupingBy(x -> x, () -> this.resultCount, Collectors.counting()));
+		//FIXME:(9)this.resultAnyに含まれるItemの種類毎に出現回数をカウントしてthis.resultCountに格納します。
 	}
 }
