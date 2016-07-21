@@ -10,6 +10,6 @@
         <tcpOptions soReuseAddr="true"/>
     </httpEndpoint>
 
-    <application name="culc" context-root="/culc" location="${appLocation}" type="war"/>
+    <application name="culcdemo" context-root="/" location="${appLocation}" type="war"/>
 
 </server>

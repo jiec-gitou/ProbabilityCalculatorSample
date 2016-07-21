@@ -31,11 +31,20 @@ public class BackingBean implements Serializable{
 	@New(LinkedList.class)
 	private List<Item> items;
 	
-	/** ガチャ結果のリスト */
+	/** ガチャ結果のリスト（一回） */
 	@Inject
 	@New(LinkedList.class)
-	private List<Item> results;
+	private List<Item> resultOne;
 	
+	/** 出るまで実行した結果のリスト */
+	@Inject
+	@New(LinkedList.class)
+	private List<List<Item>> resultAny;
+	
+	@Inject
+	@New(HashMap.class)
+	private Map<Item, Long> resultCount;
+
 	@Inject
 	private Gacha gacha;
 
@@ -47,6 +56,14 @@ public class BackingBean implements Serializable{
 		Arrays.stream(Constants.INIT_PARAMS)
 			.map(Item::new)
 			.collect(Collectors.toCollection(() -> this.items));
+	}
+
+	public List<List<Item>> getResultAny() {
+		return resultAny;
+	}
+	
+	public Set<Map.Entry<Item, Long>> getResultCount() {
+		return resultCount.entrySet();
 	}
 	
 	public List<Item> getItems() {
@@ -78,33 +95,41 @@ public class BackingBean implements Serializable{
 	/**
 	 * @return ガチャ結果のリスト
 	 */
-	public List<Item> getResults(){
-		return this.results;
+	public List<Item> getResultOne(){
+		return this.resultOne;
+	}
+	
+	/**
+	 * 結果の削除
+	 */
+	public void clear(){
+		this.resultOne.clear();
+		this.resultAny.clear();
+		this.resultCount.clear();
 	}
 	
 	/**
 	 * 実行ボタンのイベントハンドラ
 	 */
-	public String action(){
-		this.results.clear();
+	public void action(){
+		clear();
 		if(isValid()){
-			this.actionSucceeded();
+			this.resultOne.addAll(this.rollGacha());
 		}else{
 			this.actionFailed();
 		}
-		return "./index.xhtml";
 	}
 	
 	/**
 	 * ガチャ実行
 	 */
-	private void actionSucceeded() {
+	private List<Item> rollGacha() {
 		gacha.setUp(this.items);
 		this.colorredItems();
-		Stream.generate(() -> Math.random() * 100.0d)
+		return Stream.generate(() -> Math.random() * 100.0d)
 			.limit(Constants.MAX_COUNT)
 			.map(d -> gacha.roll(d))
-			.collect(Collectors.toCollection(() -> this.results));
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -138,5 +163,42 @@ public class BackingBean implements Serializable{
 				.reduce(BigDecimal.ZERO, (left, right) -> left.add(right));
 		int val = summary.multiply(new BigDecimal(Math.pow(10, Constants.SCALE))).intValue();
 		return val >= 0 && val <= 100 * Math.pow(10, Constants.SCALE);
+	}
+	
+	/**
+	 * 最も確率の低いItemを返す
+	 * @return
+	 */
+	public Item getMostRare(){
+		return this.items.stream()
+				.sorted(Comparator.comparing(Item::getProbability))
+				.findFirst()
+				.orElse(Item.EMPTY);
+	}
+	
+	/**
+	 * 目的のものが出るまで繰り返す
+	 * @param item 目的のItem
+	 */
+	public void keepRollingFor(Item item){
+		clear();
+		if(!isValid()){
+			actionFailed();
+		}else if(!item.equals(Item.EMPTY)){
+			Stream.generate(() -> rollGacha())
+				.peek(r -> this.resultAny.add(r))
+				.anyMatch(r -> r.contains(item));
+			
+			countResultAny();
+		}
+	}
+	
+	/**
+	 * Item毎の出現数をカウントして結果を更新する。
+	 */
+	private void countResultAny(){
+		this.resultAny.stream()
+				.flatMap(List::stream)
+				.collect(Collectors.groupingBy(x -> x, () -> this.resultCount, Collectors.counting()));
 	}
 }

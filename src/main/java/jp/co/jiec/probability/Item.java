@@ -16,7 +16,7 @@ import jp.co.jiec.probability.enums.Label;
  * @author K.Taira
  */
 @Dependent
-public class Item {
+public class Item{
 	/** 種別名称 */
 	@NotNull
 	private String kind;

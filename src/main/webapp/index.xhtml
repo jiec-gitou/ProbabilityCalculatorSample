@@ -41,13 +41,29 @@
 		</h:column>
 	</h:dataTable>
 	<h:commandButton class="btn btn-info btn-lg btn-block" id="actionId" value="実行" actionListener="#{backingBean.action}" />
+	<h:commandButton class="btn btn-danger btn-lg btn-block" id="actionId2" value="#{backingBean.mostRare.kind}が出るまで実行" actionListener="#{backingBean.keepRollingFor(backingBean.mostRare)}" />
 	<hr/>
 	<div class="row">
 		<div class="col-sm-1">&nbsp;</div>
-		<ui:repeat value="#{backingBean.results}" var="result">
+		<ui:repeat value="#{backingBean.resultOne}" var="result">
 			<span class="col-sm-1 label #{result.label.string}">#{result.kind}</span>&nbsp;
 		</ui:repeat>
 	</div>
+	<ui:repeat value="#{backingBean.resultAny}" var="results" varStatus="status">
+		<div class="row">
+			<div class="col-sm-1 text-right">#{status.index + 1}回目</div>
+			<ui:repeat value="#{results}" var="result">
+				<span class="col-sm-1 label #{result.label.string}">#{result.kind}</span>&nbsp;
+			</ui:repeat>
+		</div>
+	</ui:repeat>
+	<br/>
+	<ui:repeat value="#{backingBean.resultCount}" var="entry" >
+		<div class="row">
+			<span class="col-sm-offset-1 col-sm-1 label #{entry.key.label.string}">#{entry.key.kind}</span>
+			<span class="col-sm-2">#{entry.value}回</span>
+		</div>
+	</ui:repeat>
 </h:form>
 </div>
 </f:view>

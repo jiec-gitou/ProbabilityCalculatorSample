@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>jp.co.jiec.probability</groupId>
-    <artifactId>calc</artifactId>
+    <artifactId>calcdemo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -59,7 +59,7 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
-                        <warName>calc</warName>
+                        <warName>calcdemo</warName>
                     </configuration>
                 </plugin>
                 <plugin>
