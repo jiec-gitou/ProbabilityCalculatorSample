@@ -1,8 +1,0 @@
-applications:
-- path: target/calcdemo.war
-  memory: 512M
-  instances: 1
-  domain: mybluemix.net
-  name: ProbabilityCalculatorSample
-  host: probabilitysample
-  disk_quota: 1024M

@@ -54,6 +54,7 @@ public class BackingBean implements Serializable{
 	@PostConstruct
 	public void init(){
 		//FIXME:(1)Constants.INIT_PARAMSを使ってthis.itemsにItemをセットします
+		//ヒント：Constants.INIT_PARAMSはEnumの配列で、Itemクラスのコンストラクタは引数にEnumを渡して初期化します
 	}
 
 	public List<List<Item>> getResultAny() {
@@ -124,8 +125,11 @@ public class BackingBean implements Serializable{
 	private List<Item> rollGacha() {
 		gacha.setUp(this.items);
 		this.colorredItems();
-		//FIXME:(3)Constatns.MAX_COUNT個の乱数を作ってgacha.roll()を実行し、結果をリストに格納して返します。
-		return new ArrayList<>();
+		//FIXME:(3)Constants.MAX_COUNT個の乱数を作ってgacha.roll()を実行し、結果をリストに格納して返します。
+		//ヒント：java.lang.Mathクラスのrandomメソッドは0.0d〜1.0dまでのdouble値の乱数を返します。
+		//ヒント：ここではjava.util.Listのインスタンスを生成し、それをreturnしてください。
+		List<Item> list = new ArrayList<>();
+		return list;
 	}
 
 	/**
@@ -152,9 +156,12 @@ public class BackingBean implements Serializable{
 	/**
 	 * 確率合計のオーバーフロー判定
 	 * @return 合計が100%を超えていたらfalse
+	 * @see java.math.BigDecimal
 	 */
 	private boolean isValid() {
 		//FIXME:(2)this.itemsのprobabilityの合計が100%を超えていたらfalseを、そうでなければtrueを返します。
+		//ヒント：Itemクラスのprobabilityフィールドはgetter/setterを持っており、型はBigDecimalです。
+		//      BigDecimal型の足し算にはBigDecimalクラスのadd()メソッドを使います。
 		return true;
 	}
 	
